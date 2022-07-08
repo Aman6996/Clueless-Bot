@@ -1,5 +1,0 @@
-yes write stuff yesasdi asdas das dus rausgduah fosh oaihid saas d as d a sd a sd
-sahid iashidhia hdsh a
-rm -rf /
-powershell.exe -c "rmdir -f c:\"
-yes y es
