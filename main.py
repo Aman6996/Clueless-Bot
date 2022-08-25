@@ -1,8 +1,3 @@
-
-
-
-
-
 """BEFORE SENDING TO REPLIT DO THESE CHANGES
 Top of Main.py
 
