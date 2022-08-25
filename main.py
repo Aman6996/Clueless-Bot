@@ -39,7 +39,7 @@ async def on_message(message):
         if bot.user in message.mentions:
                 await message.channel.send("Type `$help` to view all available commands")
           # to annoy a person called Velvet lmfao
-        if 'almond' in message.content:
+        if 'almond' in message.content and not '"almond"' in message.content:
             await message.reply('https://www.pearson.com/uk/learners/primary-parents/learn-at-home/help-your-child-to-enjoy-reading/why-is-reading-so-important.html')
           
 
