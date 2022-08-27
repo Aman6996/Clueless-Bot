@@ -12,11 +12,11 @@ TOKEN = os.environ.get("DISCORD_BOT_SECRET")
 bot.run(TOKEN)"""
 
 
-
+from email import message
 import os
 import discord
 import random
-from webserver import keep_alive
+
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -38,8 +38,9 @@ async def on_message(message):
         await bot.process_commands(message)
         if bot.user in message.mentions:
                 await message.channel.send("Type `$help` to view all available commands")
-          # to annoy a person called Velvet lmfao
-        if 'almond' in message.content and not '"almond"' in message.content:
+        #   to annoy a person called Velvet lmfao
+        for q in ['almond', 'sparking', 'tea knight', 'lilac', 'herb', 'clotted cream', 'licorice', 'espresso', 'madeleine']:
+          if q in message.content.lower() and not f'"{q}"' in message.content.lower():
             await message.reply('https://www.pearson.com/uk/learners/primary-parents/learn-at-home/help-your-child-to-enjoy-reading/why-is-reading-so-important.html')
           
 
@@ -173,8 +174,5 @@ async def user_input(ctx, *, user_input):
 
 
 
-keep_alive()
 
-TOKEN = os.environ.get("DISCORD_BOT_SECRET")
-
-bot.run(TOKEN)
+bot.run(os.getenv("TOKEN"))
