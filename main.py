@@ -39,9 +39,11 @@ async def on_message(message):
     if f"<@{bot.user.id}>" in message.content:
             await message.reply("Type `$help` to view all available commands")
         #   to annoy a person called Velvet lmfao
-    for q in ['almond', 'sparking', 'tea knight', 'lilac', 'herb', 'clotted cream', 'licorice', 'espresso', 'madeleine', 'caramel arrow', 'wolf']:
+    for q in ['almond', 'sparking', 'tea knight', 'lilac', 'herb', 'clotted cream', 'licorice', 'espresso', 'madeleine', 'caramel arrow', 'wolf', 'milk', 'raspberry', 'vampire']:
         if q in message.content.lower() and not f'"{q}"' in message.content.lower():
             await message.reply('https://www.pearson.com/uk/learners/primary-parents/learn-at-home/help-your-child-to-enjoy-reading/why-is-reading-so-important.html')
+        else:
+            break
 
 
     # beep boop testing testing
