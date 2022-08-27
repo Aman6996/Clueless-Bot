@@ -36,22 +36,22 @@ async def on_message(message):
         return
     else:
         await bot.process_commands(message)
-        if bot.user in message.mentions:
-                await message.channel.send("Type `$help` to view all available commands")
+        if f"<@{bot.user.id}>" in message.content:
+                await message.reply("Type `$help` to view all available commands")
         #   to annoy a person called Velvet lmfao
         for q in ['almond', 'sparking', 'tea knight', 'lilac', 'herb', 'clotted cream', 'licorice', 'espresso', 'madeleine']:
           if q in message.content.lower() and not f'"{q}"' in message.content.lower():
             await message.reply('https://www.pearson.com/uk/learners/primary-parents/learn-at-home/help-your-child-to-enjoy-reading/why-is-reading-so-important.html')
-          
 
 
-@bot.event
-async def on_command_error(ctx, error):
-    # If the command does not exist/is not found.
-    if isinstance(error, commands.CommandNotFound):
-        return await ctx.message.add_reaction("❓")
-    else:
-        raise error
+
+# @bot.event
+# async def on_command_error(ctx, error):
+#     # If the command does not exist/is not found.
+#     if isinstance(error, commands.CommandNotFound):
+#         return await ctx.message.add_reaction("❓")
+#     else:
+#         raise error
 
 @bot.event
 async def on_ready():
