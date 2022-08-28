@@ -39,11 +39,16 @@ async def on_message(message):
     if f"<@{bot.user.id}>" in message.content:
             await message.reply("Type `$help` to view all available commands")
         #   to annoy a person called Velvet lmfao
-    for q in ['almond', 'sparking', 'tea knight', 'lilac', 'herb', 'clotted cream', 'licorice', 'espresso', 'madeleine', 'caramel arrow', 'wolf', 'milk', 'raspberry', 'vampire']:
-        if q in message.content.lower() and not f'"{q}"' in message.content.lower():
+    for q in ['almond', 'sparking', 'tea knight', 'lilac', 'herb', 'clotted cream', 'madeleine', 'caramel arrow', 'wolf', 'milk', 'raspberry', 'vampire']:
+        if message.author.id == 1004534564246523965:
+          if q in message.content.lower() and not f'"{q}"' in message.content.lower():
             await message.reply('https://www.pearson.com/uk/learners/primary-parents/learn-at-home/help-your-child-to-enjoy-reading/why-is-reading-so-important.html')
-        else:
             break
+        else:
+          return
+   # if 'belbet' in message.content:
+   #     await message.reply('yes, belbet')
+
 
 
     # beep boop testing testing
@@ -100,7 +105,11 @@ async def hi(ctx):
 @bot.command(aliases=["drink", "wotah"])
 async def water(ctx):
     """offers wotah"""
-    await ctx.reply(file=discord.File("images/water.png"))
+    await ctx.reply("Here's your water!", file=discord.File("images/water.png"))
+
+@bot.command()
+async def pizza(ctx):
+  await ctx.reply("Here's your Pizza!", file=discord.File("images/pizza.jpg"))
 
 
 @bot.command()
@@ -175,6 +184,16 @@ async def getpfp(ctx: commands.Context, user: discord.User = None):
 async def user_input(ctx, *, user_input):
     exec(user_input)
     await ctx.reply(exec(user_input))
+
+
+@bot.command(aliases=["ched"])
+async def deadchat(ctx):
+  embed = discord.Embed(title="dead chat", description="You know guys, I've been thinking about something. This chat has been pretty dead seeing as nobody has talked for a while now. But I feel like that's too long of a way to describe it, so I've come up with a brand new nomenclature that's gonna blow your minds. You see if you combine the word 'chat' with the word 'dead' you get the word CHED! It's quick, concise, clear, and straight to the point. Whenever the server is inactive, don't bother trying to strike up an interesting conversation. Just say ched. It's the easiest and most efficient way to revive it! It doesn't even matter how long nobody has talked. It could be two hours or two seconds. What's the difference? It still means the server is ched. And pointing that out is extremely imperative to the server's well-being. If you don't respond to literally every instance of the server's inactivity with the repeated use of this one word, the server will plunge into darkness and despair as people never send messages ever again. So go on. Repeat the word ched with pride and honor whenever people forget to speak and revel in the sense of fulfillment and power you get from the use of the word ched.", color=ctx.author.colour)
+  await ctx.send(embed=embed)
+
+
+
+
 
 
 
