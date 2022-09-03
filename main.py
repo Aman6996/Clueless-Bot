@@ -12,20 +12,34 @@ TOKEN = os.environ.get("DISCORD_BOT_SECRET")
 bot.run(TOKEN)"""
 
 
-from email import message
+
+
+
 import os
 import discord
 import random
+from googletrans import Translator
+translator = Translator()
 
 from dotenv import load_dotenv
 load_dotenv()
-
-
-
 from discord.ext import commands
+
+
+class MyHelp(commands.HelpCommand):
+    # async def send_bot_help(self, mapping):
+    #     destination = self.get_destination()
+    #     await destination.send('send_bot_help got called')
+    async def send_bot_help(self, mapping):
+        embed = discord.Embed(title='Commands:')
+        for cog, commands in mapping.items():
+            embed.add_field(name=getattr(cog, "qualified_name", "No Category"), value="\n".join(commands))
+        channel = self.get_destination()
+        await channel.send(embed=embed)
+
 prefix = "$", "6."
-bot = commands.Bot(command_prefix=prefix, intents= discord.Intents.all(), case_insensitive=True)
-bot.remove_command("help")
+bot = commands.Bot(command_prefix=prefix, intents= discord.Intents.all(), case_insensitive=True, help_command=MyHelp())
+# bot.remove_command("help")
 
 
 
@@ -36,8 +50,6 @@ async def on_message(message):
         return
     else:
         await bot.process_commands(message)
-    if f"<@{bot.user.id}>" in message.content:
-            await message.reply("Type `$help` to view all available commands")
         #   to annoy a person called Velvet lmfao
     for q in ['almond', 'sparking', 'tea knight', 'lilac', 'herb', 'clotted cream', 'madeleine', 'caramel arrow', 'wolf', 'milk', 'raspberry', 'vampire']:
         if message.author.id == 1004534564246523965:
@@ -46,6 +58,8 @@ async def on_message(message):
             break
         else:
           return
+    if f"<@{bot.user.id}>" in message.content:
+            await message.reply("Type `$help` to view all available commands")
    # if 'belbet' in message.content:
    #     await message.reply('yes, belbet')
 
@@ -84,13 +98,6 @@ async def ping(ctx):
         title="Ping", description=f"{ping} ms", color=color))
 
 
-"""Hard coded help command lmfao"""
-@bot.command()
-async def help(ctx):
-    embed = discord.Embed(title="Help", description="\n`$water` - Offers you water!\n\n `$coinflip` - Flips a coin\n\n `$getpfp` - Fetches the pfp of you **or** a given person\n\n `$smile` Smiles for you!\n\n `$uwu` - For... weirdos lmao",color=ctx.author.color)
-    embed.add_field(name="Unlisted Commands", value="`$hi`, `$hello` - Casual greeting lmao\n\n `$sayyourtoken` - idk try it yourself")
-    await ctx.reply(embed=embed)
-
 
 @bot.command(aliases=["hello"])
 async def hi(ctx):
@@ -118,9 +125,10 @@ async def smile(ctx):
     await ctx.send("<:widesmile1:826114986338025543><:widesmile2:826114986446553089><:widesmile3:826114986543153173>")
 
 
-# @bot.command()
-# async def user_input(ctx, *, user_input):
-#     print(user_input)
+@bot.command()
+async def yes(ctx, *, user_input):
+    print(user_input)
+    await ctx.reply(user_input)
 #     with open('input.txt', 'a') as f:
 #         f.write(user_input + "\n")
 
@@ -192,11 +200,22 @@ async def deadchat(ctx):
   await ctx.send(embed=embed)
 
 
+# WIP
+# @bot.command()
+# async def Info(ctx):
+#     await ctx.send(f"{len([member for member in ctx.guild.members])}")
 
 
 
 
-
+@bot.command(aliases=["ts"])
+async def translate(ctx, *, user_input, user: discord.User = None):
+    tr = translator.translate(f"{user_input}")
+    text = tr.text
+    TransDict={"af": "Afrikaans", "sq": "Albanian", "am": "Amharic", "ar": "Arabic", "hy": "Armenian", "az": "Azerbaijani", "eu": "Basque", "be": "Belarusian", "bn": "Bengali", "bs": "Bosnian", "bg": "Bulgarian", "ca": "Catalan", "ceb": "Cebuano", "zh-CN": "Chinese (Simplified)", "zh-TW": "Chinese (Traditional)", "co": "Corsican", "hr": "Croatian", "cs": "Czech", "da": "Danish", "nl": "Dutch", "en": "English", "eo": "Esperanto", "et": "Estonian", "fi": "Finnish", "fr": "French", "fy": "Frisian", "gl": "Galician", "ka": "Georgian", "de": "German", "el": "Greek", "gu": "Gujarati", "ht": "Haitian Creole", "ha": "Hausa", "haw": "Hawaiian", "iw": "Hebrew", "hi": "Hindi", "hmn": "Hmong", "hu": "Hungarian", "is": "Icelandic", "ig": "Igbo", "id": "Indonesian", "ga": "Irish", "it": "Italian", "ja": "Japanese", "jw": "Javanese", "kn": "Kannada", "kk": "Kazakh", "km": "Khmer", "ko": "Korean", "ku": "Kurdish", "ky": "Kyrgyz", "lo": "Lao", "la": "Latin", "lv": "Latvian", "lt": "Lithuanian", "lb": "Luxembourgish", "mk": "Macedonian", "mg": "Malagasy", "ms": "Malay", "ml": "Malayalam", "mt": "Maltese", "mi": "Maori", "mr": "Marathi", "mn": "Mongolian", "my": "Myanmar (Burmese)", "ne": "Nepali", "no": "Norwegian", "ny": "Nyanja (Chichewa)", "ps": "Pashto", "fa": "Persian", "pl": "Polish", "pt": "Portuguese (Portugal, Brazil)", "pa": "Punjabi", "ro": "Romanian", "ru": "Russian", "sm": "Samoan", "gd": "Scots Gaelic", "sr": "Serbian", "st": "Sesotho", "sn": "Shona", "sd": "Sindhi", "si": "Sinhala (Sinhalese)", "sk": "Slovak", "sl": "Slovenian", "so": "Somali", "es": "Spanish", "su": "Sundanese", "sw": "Swahili", "sv": "Swedish", "tl": "Tagalog (Filipino)", "tg": "Tajik", "ta": "Tamil", "te": "Telugu", "th": "Thai", "tr": "Turkish", "uk": "Ukrainian", "ur": "Urdu", "uz": "Uzbek", "vi": "Vietnamese", "cy": "Welsh", "xh": "Xhosa", "yi": "Yiddish", "yo": "Yoruba", "zu": "Zulu"}
+    TranslatedFrom = discord.Embed(title="Translated from "+ TransDict[tr.src], description=f"{user_input}")
+    TranslatedTo = discord.Embed(title="Translated to English", description=tr.text)
+    await ctx.reply(embeds=[TranslatedFrom, TranslatedTo])
 
 
 
