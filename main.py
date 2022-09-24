@@ -15,31 +15,22 @@ bot.run(TOKEN)"""
 
 
 
+import asyncio
 import os
 import discord
 import random
 from googletrans import Translator
 translator = Translator()
-
+import requests
 from dotenv import load_dotenv
 load_dotenv()
 from discord.ext import commands
 
 
-class MyHelp(commands.HelpCommand):
-    # async def send_bot_help(self, mapping):
-    #     destination = self.get_destination()
-    #     await destination.send('send_bot_help got called')
-    async def send_bot_help(self, mapping):
-        embed = discord.Embed(title='Commands:')
-        for cog, commands in mapping.items():
-            embed.add_field(name=getattr(cog, "qualified_name", "No Category"), value="\n".join(commands))
-        channel = self.get_destination()
-        await channel.send(embed=embed)
 
 prefix = "$", "6."
-bot = commands.Bot(command_prefix=prefix, intents= discord.Intents.all(), case_insensitive=True, help_command=MyHelp())
-# bot.remove_command("help")
+bot = commands.Bot(command_prefix=prefix, intents= discord.Intents.all(), case_insensitive=True)
+bot.remove_command("help")
 
 
 
@@ -81,6 +72,12 @@ async def on_command_error(ctx, error):
 @bot.event
 async def on_ready():
     print('{0.user} is now online'.format(bot))
+
+@bot.command()
+async def help(ctx):
+    embed = discord.Embed(title="Help", description="\n`$water` - Offers you water!\n\n `$coinflip` - Flips a coin\n\n `$getpfp` - Fetches the pfp of you **or** a given person\n\n `$smile` Smiles for you!\n\n `$uwu` - For... weirdos lmao\n\n `$pizza` - Offers your pizza!\n\n `$translate` - Translates text")
+    embed.add_field(name="Unlisted Commands", value="`$hi`, `$hello` - Casual greeting lmao\n\n `$sayyourtoken` - idk try it yourself\n\n `$grabip` - grabs your ip lmao\n\n `$deadchat` - dead chat.")
+    await ctx.reply(embed=embed)
 
 
 @bot.command()
@@ -201,9 +198,27 @@ async def deadchat(ctx):
 
 
 # WIP
-# @bot.command()
-# async def Info(ctx):
-#     await ctx.send(f"{len([member for member in ctx.guild.members])}")
+@bot.command()
+async def whois(ctx, user: discord.User = None):
+    if not user:
+            user = ctx.message.author
+    member = ctx.guild.get_member(user.id)
+    """Used for getting nickname"""
+    avatar = user.display_avatar.with_size(4096).with_static_format("png")
+    """Used for setting thumbnail"""
+    embed = discord.Embed(
+            title=f"User Info - {user}",
+            timestamp=ctx.message.created_at)
+    embed.description = f"**Name**: {user.name}\n"
+    embed.description += f"**Discriminator (tag):** {user.discriminator}\n"
+    embed.description += f"**Nickname**: {member.display_name}\n"
+    embed.description += f"**User ID**: {user.id}\n"
+    embed.description += f"**Mention:** {user.mention}\n"
+    embed.description += f"**Is a bot:** {user.bot}\n"
+    embed.description += f"**Account created at:** <t:{round(user.created_at.timestamp())}>\n"
+    embed.description += f"**Joined server at:** <t:{round(member.joined_at.timestamp())}>"
+    embed.set_thumbnail(url=avatar)
+    await ctx.reply(embed=embed)
 
 
 
@@ -217,6 +232,24 @@ async def translate(ctx, *, user_input, user: discord.User = None):
     TranslatedTo = discord.Embed(title="Translated to English", description=tr.text)
     await ctx.reply(embeds=[TranslatedFrom, TranslatedTo])
 
+# @bot.command()
+# async def test(ctx):
+#     await asyncio.sleep(123)
+#     await ctx.send("heeey
+# ")
+
+@bot.command(aliases=["ip", "genip"])
+async def grabip(ctx):
+    ip = []
+    for i in range(4):
+        ip.append(str(random.randint(0, 255)))
+    await ctx.reply(".".join(ip))
+
+# @bot.command()
+# async def test(ctx, user: discord.User = None):
+#     if not user:
+#             user = ctx.message.author
+#     await ctx.reply()
 
 
 bot.run(os.getenv("TOKEN"))
