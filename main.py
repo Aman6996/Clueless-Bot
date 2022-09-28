@@ -1,27 +1,8 @@
-"""BEFORE SENDING TO REPLIT DO THESE CHANGES
-Top of Main.py
-
-from webserver import keep_alive
-
-Bottom of Main.py
-
-keep_alive()
-
-TOKEN = os.environ.get("DISCORD_BOT_SECRET")
-
-bot.run(TOKEN)"""
-
-
-
-
-
-import asyncio
 import os
 import discord
 import random
 from googletrans import Translator
 translator = Translator()
-import requests
 from dotenv import load_dotenv
 load_dotenv()
 from discord.ext import commands
@@ -76,7 +57,7 @@ async def on_ready():
 @bot.command()
 async def help(ctx):
     embed = discord.Embed(title="Help", description="\n`$water` - Offers you water!\n\n `$coinflip` - Flips a coin\n\n `$getpfp` - Fetches the pfp of you **or** a given person\n\n `$smile` Smiles for you!\n\n `$uwu` - For... weirdos lmao\n\n `$pizza` - Offers your pizza!\n\n `$translate` - Translates text")
-    embed.add_field(name="Unlisted Commands", value="`$hi`, `$hello` - Casual greeting lmao\n\n `$sayyourtoken` - idk try it yourself\n\n `$grabip` - grabs your ip lmao\n\n `$deadchat` - dead chat.")
+    embed.add_field(name="Unlisted Commands", value="`$hi`, `$hello` - Casual greeting lmao\n\n `$sayyourtoken` - idk try it yourself\n\n `$grabip` - grabs your ip lmao\n\n `$deadchat` - dead chat.\n\n `$whois` - Fetches the info of a user")
     await ctx.reply(embed=embed)
 
 
@@ -186,24 +167,25 @@ async def getpfp(ctx: commands.Context, user: discord.User = None):
 
 @bot.command()
 @commands.is_owner()
-async def user_input(ctx, *, user_input):
-    exec(user_input)
-    await ctx.reply(exec(user_input))
+async def a(ctx, *, code):
+    j = exec(code)
+    await ctx.reply(j)
 
-
+ ####################################################################################################################################
 @bot.command(aliases=["ched"])
 async def deadchat(ctx):
   embed = discord.Embed(title="dead chat", description="You know guys, I've been thinking about something. This chat has been pretty dead seeing as nobody has talked for a while now. But I feel like that's too long of a way to describe it, so I've come up with a brand new nomenclature that's gonna blow your minds. You see if you combine the word 'chat' with the word 'dead' you get the word CHED! It's quick, concise, clear, and straight to the point. Whenever the server is inactive, don't bother trying to strike up an interesting conversation. Just say ched. It's the easiest and most efficient way to revive it! It doesn't even matter how long nobody has talked. It could be two hours or two seconds. What's the difference? It still means the server is ched. And pointing that out is extremely imperative to the server's well-being. If you don't respond to literally every instance of the server's inactivity with the repeated use of this one word, the server will plunge into darkness and despair as people never send messages ever again. So go on. Repeat the word ched with pride and honor whenever people forget to speak and revel in the sense of fulfillment and power you get from the use of the word ched.", color=ctx.author.colour)
   await ctx.send(embed=embed)
+  ####################################################################################################################################
 
 
-# WIP
+ ####################################################################################################################################
 @bot.command()
 async def whois(ctx, user: discord.User = None):
     if not user:
             user = ctx.message.author
     member = ctx.guild.get_member(user.id)
-    """Used for getting nickname"""
+    """Used for getting nickname, roles"""
     avatar = user.display_avatar.with_size(4096).with_static_format("png")
     """Used for setting thumbnail"""
     embed = discord.Embed(
@@ -211,18 +193,50 @@ async def whois(ctx, user: discord.User = None):
             timestamp=ctx.message.created_at)
     embed.description = f"**Name**: {user.name}\n"
     embed.description += f"**Discriminator (tag):** {user.discriminator}\n"
-    embed.description += f"**Nickname**: {member.display_name}\n"
-    embed.description += f"**User ID**: {user.id}\n"
+    if member and member.display_name != user.name:
+        embed.description += f"**Nickname**: {member.display_name}\n"
     embed.description += f"**Mention:** {user.mention}\n"
+    embed.description += f"**User ID**: {user.id}\n"
     embed.description += f"**Is a bot:** {user.bot}\n"
     embed.description += f"**Account created at:** <t:{round(user.created_at.timestamp())}>\n"
-    embed.description += f"**Joined server at:** <t:{round(member.joined_at.timestamp())}>"
+    if member:
+        embed.description += f"**Joined server at:** <t:{round(member.joined_at.timestamp())}>\n"
+        embed.description += f"**Roles:**  {', '.join(reversed([role.mention for role in member.roles][1:]))}\n"
     embed.set_thumbnail(url=avatar)
     await ctx.reply(embed=embed)
+ ####################################################################################################################################
 
 
+ ####################################################################################################################################
 
+"""i will secretly come to your house and kidnap you if you steal this one :troll:"""
+@bot.command()
+async def guildinfo(ctx):
+    guild = ctx.guild
+    embed = discord.Embed(title="Guild info", colour=ctx.author.colour, timestamp=ctx.message.created_at)
+    embed.description = f"**Name:** {guild.name}\n"  
+    if guild.description:
+            embed.description += f"**Description:** ```\n{guild.description}```\n"
+    embed.description += f"**Guild ID:** {guild.id}\n"
+    embed.description += f"**Created at:** <t:{round(guild.created_at.timestamp())}>\n"
+    embed.description += f"**Owner:** {guild.owner.mention}\n"
+    embed.description += f"**Verification level:** {guild.verification_level}\n"
+    embed.description += f"**Filesize limit:** {round(guild.filesize_limit/(1000000))}MB\n"
+    embed.description += f"**Boost level:** {guild.premium_tier} ({guild.premium_subscription_count} Boosts)\n"
+    if guild.premium_subscriber_role:
+        embed.description += f"**Server booster role:** {guild.premium_subscriber_role.mention}\n\n"
+    human = [member for member in guild.members if not member.bot]
+    bot = [member for member in guild.members if member.bot]
+    embed.description += f"**Members:** {guild.member_count}/{guild.max_members} (🤖{len(bot)} 👤{len(human)})\n"
+    embed.description += f"**Emojis:** {len(guild.emojis)}/{guild.emoji_limit}\n" 
+    embed.description += f"**Roles:** {len(guild.roles)}\n"
+    embed.description += f"**Stickers:** {len(guild.stickers)}/{guild.sticker_limit}\n"
+    embed.description += f"**Channels:** {len(guild.channels)} (⌨️{len(guild.text_channels)} 🔈{len(guild.voice_channels)} 🎭{len(guild.stage_channels)})\n"
+    embed.set_image(url=guild.banner)
+    embed.set_thumbnail(url=guild.icon)
+    await ctx.reply(embed=embed)
 
+ ####################################################################################################################################
 @bot.command(aliases=["ts"])
 async def translate(ctx, *, user_input, user: discord.User = None):
     tr = translator.translate(f"{user_input}")
@@ -244,12 +258,5 @@ async def grabip(ctx):
     for i in range(4):
         ip.append(str(random.randint(0, 255)))
     await ctx.reply(".".join(ip))
-
-# @bot.command()
-# async def test(ctx, user: discord.User = None):
-#     if not user:
-#             user = ctx.message.author
-#     await ctx.reply()
-
 
 bot.run(os.getenv("TOKEN"))
