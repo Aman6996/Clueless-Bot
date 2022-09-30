@@ -1,12 +1,12 @@
 import os
 import discord
 import random
+from random import shuffle
 from googletrans import Translator
 translator = Translator()
 from dotenv import load_dotenv
 load_dotenv()
 from discord.ext import commands
-
 
 
 prefix = "$", "6."
@@ -22,25 +22,8 @@ async def on_message(message):
         return
     else:
         await bot.process_commands(message)
-        #   to annoy a person called Velvet lmfao
-    for q in ['almond', 'sparking', 'tea knight', 'lilac', 'herb', 'clotted cream', 'madeleine', 'caramel arrow', 'wolf', 'milk', 'raspberry', 'vampire']:
-        if message.author.id == 1004534564246523965:
-          if q in message.content.lower() and not f'"{q}"' in message.content.lower():
-            await message.reply('https://www.pearson.com/uk/learners/primary-parents/learn-at-home/help-your-child-to-enjoy-reading/why-is-reading-so-important.html')
-            break
-        else:
-          return
     if f"<@{bot.user.id}>" in message.content:
             await message.reply("Type `$help` to view all available commands")
-   # if 'belbet' in message.content:
-   #     await message.reply('yes, belbet')
-
-
-
-    # beep boop testing testing
-    # if message.content == "deeeez":
-    #     await message.channel.send("your nuts are cool " + f"{message.author}" + "!")
-
 
 @bot.event
 async def on_command_error(ctx, error):
@@ -56,8 +39,8 @@ async def on_ready():
 
 @bot.command()
 async def help(ctx):
-    embed = discord.Embed(title="Help", description="\n`$water` - Offers you water!\n\n `$coinflip` - Flips a coin\n\n `$getpfp` - Fetches the pfp of you **or** a given person\n\n `$smile` Smiles for you!\n\n `$uwu` - For... weirdos lmao\n\n `$pizza` - Offers your pizza!\n\n `$translate` - Translates text")
-    embed.add_field(name="Unlisted Commands", value="`$hi`, `$hello` - Casual greeting lmao\n\n `$sayyourtoken` - idk try it yourself\n\n `$grabip` - grabs your ip lmao\n\n `$deadchat` - dead chat.\n\n `$whois` - Fetches the info of a user")
+    embed = discord.Embed(title="Help", description="\n`$water` - Offers you water!\n\n `$coinflip` - Flips a coin\n\n `$getpfp` - Fetches the pfp of you **or** a given person\n\n`$pizza` - Offers your pizza!\n\n `$translate` - Translates text\n\n `$whois` - Fetches the info of a user\n\n `$guildinfo` - Displays the information of a server (also known as guild)")
+    embed.add_field(name="Not so useful commands", value="`$grabip` - grabs your ip lmao\n\n `$deadchat` - dead chat.\n\n `$uwu` - for... weirdos lmao\n\n `$smile` - smiles for you\n\n ")
     await ctx.reply(embed=embed)
 
 
@@ -82,14 +65,8 @@ async def hi(ctx):
     await ctx.reply("Hello!")
 
 
-# @bot.command()
-# async def image(ctx):
-#     await ctx.send(file=discord.File("images/2022-07-07_14-54.png"))
-
-
 @bot.command(aliases=["drink", "wotah"])
 async def water(ctx):
-    """offers wotah"""
     await ctx.reply("Here's your water!", file=discord.File("images/water.png"))
 
 @bot.command()
@@ -103,10 +80,6 @@ async def smile(ctx):
     await ctx.send("<:widesmile1:826114986338025543><:widesmile2:826114986446553089><:widesmile3:826114986543153173>")
 
 
-@bot.command()
-async def yes(ctx, *, user_input):
-    print(user_input)
-    await ctx.reply(user_input)
 #     with open('input.txt', 'a') as f:
 #         f.write(user_input + "\n")
 
@@ -117,12 +90,6 @@ async def uwu(ctx):
     """for weirdos"""
     embed.set_image(url="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Stylized_uwu_emoticon.svg/1200px-Stylized_uwu_emoticon.svg.png")
     await ctx.reply(embed=embed)
-
-
-@bot.command()
-async def sayyourtoken(ctx):
-    """idk"""
-    await ctx.send("no")
 
 
 @bot.command(aliases=["flip"])
@@ -138,7 +105,8 @@ async def github(ctx):
             description="This bot is open source!",
             url="https://github.com/Aman6996/Clueless-Bot",
             color=ctx.author.color)
-    """links to github"""        
+    """links to github"""     
+    embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/85976860?s=400&u=170fb6e333877db6d361b3b86b82b51fb6d2a5a5&v=4")   
     await ctx.reply(embed=embed)
 
 @bot.command(aliases=["pfpget", "gpfp", "pfp"])
@@ -156,13 +124,6 @@ async def getpfp(ctx: commands.Context, user: discord.User = None):
         embed.set_image(url=avatar)
         embed.set_footer(text=f"Requested by {ctx.author}")
         await ctx.send(embed=embed)
-
-
-
-# @bot.command()
-# @commands.is_owner()
-# async def test(ctx):
-#     await ctx.message.add_reaction("🔐")
 
 
 @bot.command()
@@ -184,13 +145,16 @@ async def deadchat(ctx):
 async def whois(ctx, user: discord.User = None):
     if not user:
             user = ctx.message.author
+    
     member = ctx.guild.get_member(user.id)
     """Used for getting nickname, roles"""
     avatar = user.display_avatar.with_size(4096).with_static_format("png")
     """Used for setting thumbnail"""
+
     embed = discord.Embed(
             title=f"User Info - {user}",
-            timestamp=ctx.message.created_at)
+            timestamp=ctx.message.created_at,
+            color=ctx.author.color)
     embed.description = f"**Name**: {user.name}\n"
     embed.description += f"**Discriminator (tag):** {user.discriminator}\n"
     if member and member.display_name != user.name:
@@ -209,8 +173,8 @@ async def whois(ctx, user: discord.User = None):
 
  ####################################################################################################################################
 
-"""i will secretly come to your house and kidnap you if you steal this one :troll:"""
-@bot.command()
+
+@bot.command(aliases=["gi"])
 async def guildinfo(ctx):
     guild = ctx.guild
     embed = discord.Embed(title="Guild info", colour=ctx.author.colour, timestamp=ctx.message.created_at)
@@ -227,7 +191,7 @@ async def guildinfo(ctx):
         embed.description += f"**Server booster role:** {guild.premium_subscriber_role.mention}\n\n"
     human = [member for member in guild.members if not member.bot]
     bot = [member for member in guild.members if member.bot]
-    embed.description += f"**Members:** {guild.member_count}/{guild.max_members} (🤖{len(bot)} 👤{len(human)})\n"
+    embed.description += f"**Members:** {guild.member_count}/{guild.max_members} (🤖{len(bot)} | 👤{len(human)})\n"
     embed.description += f"**Emojis:** {len(guild.emojis)}/{guild.emoji_limit}\n" 
     embed.description += f"**Roles:** {len(guild.roles)}\n"
     embed.description += f"**Stickers:** {len(guild.stickers)}/{guild.sticker_limit}\n"
@@ -245,12 +209,7 @@ async def translate(ctx, *, user_input, user: discord.User = None):
     TranslatedFrom = discord.Embed(title="Translated from "+ TransDict[tr.src], description=f"{user_input}")
     TranslatedTo = discord.Embed(title="Translated to English", description=tr.text)
     await ctx.reply(embeds=[TranslatedFrom, TranslatedTo])
-
-# @bot.command()
-# async def test(ctx):
-#     await asyncio.sleep(123)
-#     await ctx.send("heeey
-# ")
+ ####################################################################################################################################
 
 @bot.command(aliases=["ip", "genip"])
 async def grabip(ctx):
@@ -258,5 +217,6 @@ async def grabip(ctx):
     for i in range(4):
         ip.append(str(random.randint(0, 255)))
     await ctx.reply(".".join(ip))
+
 
 bot.run(os.getenv("TOKEN"))
