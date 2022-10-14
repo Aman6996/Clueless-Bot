@@ -21,6 +21,19 @@ async def on_message(message):
     if f"<@{bot.user.id}>" in message.content:
         await message.reply("Type `$help` to view all available commands")
 
+# i will secretly come to your house and kidnap you then put you in my basement if you try stealing this. this took more than an hour
+@bot.event
+async def on_reaction_add(reaction: discord.Reaction,  user: (discord.User, discord.Reaction)):
+    star = "⭐"
+    starboard = bot.get_channel(789195444957609994)
+    if reaction.emoji in star:
+        if reaction.count > 3:
+            embed = discord.Embed(title=reaction.message.author,
+                                  description=f"{reaction.message.content}", color=0x0dff00)
+        if reaction.message.attachments:
+            embed.set_image(reaction.message.attachments[0].url)
+        await starboard.send(f"⭐ {reaction.count} | {reaction.message.channel.mention}", embed=embed)
+
 
 @bot.event
 async def on_command_error(ctx, error):
