@@ -21,7 +21,7 @@ async def on_message(message):
     if f"<@{bot.user.id}>" in message.content:
         await message.reply("Type `$help` to view all available commands")
 
-# i will secretly come to your house and kidnap you then put you in my basement if you try stealing this. this took more than an hour to make
+# i will secretly come to your house and kidnap you then put you in my basement if you try stealing this. this took more than 2 hours to make
 @bot.event
 async def on_reaction_add(reaction: discord.Reaction,  user: (discord.User, discord.Reaction)):
     star = "⭐"
