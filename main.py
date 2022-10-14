@@ -1,12 +1,9 @@
-from discord.ext import commands
-from dotenv import load_dotenv
 import os
 import discord
 import random
-from random import shuffle
+from discord.ext import commands
+from dotenv import load_dotenv
 from googletrans import Translator
-translator = Translator()
-load_dotenv()
 
 prefix = "$", "6."
 bot = commands.Bot(command_prefix=prefix,
@@ -26,7 +23,6 @@ async def on_message(message):
 
 @bot.event
 async def on_command_error(ctx, error):
-    # If the command does not exist/is not found.
     if isinstance(error, commands.CommandNotFound):
         return await ctx.message.add_reaction("❓")
     else:
@@ -76,14 +72,10 @@ async def smile(ctx):
     """smiles for you"""
     await ctx.send("<:widesmile1:826114986338025543><:widesmile2:826114986446553089><:widesmile3:826114986543153173>")
 
-#     with open('input.txt', 'a') as f:
-#         f.write(user_input + "\n")
-
 
 @bot.command()
 async def uwu(ctx):
     embed = discord.Embed(title="owo!")
-    """for weirdos"""
     embed.set_image(
         url="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Stylized_uwu_emoticon.svg/1200px-Stylized_uwu_emoticon.svg.png")
     await ctx.reply(embed=embed)
@@ -91,7 +83,6 @@ async def uwu(ctx):
 
 @bot.command(aliases=["flip"])
 async def coinflip(ctx):
-    """flips a coin"""
     await ctx.reply(random.choice(["Heads!", "Tails!"]) + " :coin:")
 
 
@@ -102,7 +93,6 @@ async def github(ctx):
         description="This bot is open source!",
         url="https://github.com/Aman6996/Clueless-Bot",
         color=ctx.author.color)
-    """links to github"""
     embed.set_thumbnail(
         url="https://avatars.githubusercontent.com/u/85976860?s=400&u=170fb6e333877db6d361b3b86b82b51fb6d2a5a5&v=4")
     await ctx.reply(embed=embed)
@@ -124,13 +114,6 @@ async def getpfp(ctx: commands.Context, user: discord.User = None):
     await ctx.send(embed=embed)
 
 
-@bot.command()
-@commands.is_owner()
-async def a(ctx, *, code):
-    j = exec(code)
-    await ctx.reply(j)
-
-
 @bot.command(aliases=["ched"])
 async def deadchat(ctx):
     embed = discord.Embed(title="dead chat", description="You know guys, I've been thinking about something. This chat has been pretty dead seeing as nobody has talked for a while now. But I feel like that's too long of a way to describe it, so I've come up with a brand new nomenclature that's gonna blow your minds. You see if you combine the word 'chat' with the word 'dead' you get the word CHED! It's quick, concise, clear, and straight to the point. Whenever the server is inactive, don't bother trying to strike up an interesting conversation. Just say ched. It's the easiest and most efficient way to revive it! It doesn't even matter how long nobody has talked. It could be two hours or two seconds. What's the difference? It still means the server is ched. And pointing that out is extremely imperative to the server's well-being. If you don't respond to literally every instance of the server's inactivity with the repeated use of this one word, the server will plunge into darkness and despair as people never send messages ever again. So go on. Repeat the word ched with pride and honor whenever people forget to speak and revel in the sense of fulfillment and power you get from the use of the word ched.", color=ctx.author.colour)
@@ -143,9 +126,7 @@ async def whois(ctx, user: discord.User = None):
         user = ctx.message.author
 
     member = ctx.guild.get_member(user.id)
-    """Used for getting nickname, roles"""
     avatar = user.display_avatar.with_size(4096).with_static_format("png")
-    """Used for setting thumbnail"""
 
     embed = discord.Embed(
         title=f"User Info - {user}",
@@ -196,6 +177,7 @@ async def guildinfo(ctx):
 
 @bot.command(aliases=["ts"])
 async def translate(ctx, *, user_input, user: discord.User = None):
+    translator = Translator()
     tr = translator.translate(f"{user_input}")
     text = tr.text
     TransDict = {"af": "Afrikaans", "sq": "Albanian", "am": "Amharic", "ar": "Arabic", "hy": "Armenian", "az": "Azerbaijani", "eu": "Basque", "be": "Belarusian", "bn": "Bengali", "bs": "Bosnian", "bg": "Bulgarian", "ca": "Catalan", "ceb": "Cebuano", "zh-CN": "Chinese (Simplified)", "zh-TW": "Chinese (Traditional)", "co": "Corsican", "hr": "Croatian", "cs": "Czech", "da": "Danish", "nl": "Dutch", "en": "English", "eo": "Esperanto", "et": "Estonian", "fi": "Finnish", "fr": "French", "fy": "Frisian", "gl": "Galician", "ka": "Georgian", "de": "German", "el": "Greek", "gu": "Gujarati", "ht": "Haitian Creole", "ha": "Hausa", "haw": "Hawaiian", "iw": "Hebrew", "hi": "Hindi", "hmn": "Hmong", "hu": "Hungarian", "is": "Icelandic", "ig": "Igbo", "id": "Indonesian", "ga": "Irish", "it": "Italian", "ja": "Japanese", "jw": "Javanese", "kn": "Kannada", "kk": "Kazakh", "km": "Khmer", "ko": "Korean", "ku": "Kurdish", "ky": "Kyrgyz", "lo": "Lao", "la": "Latin",
@@ -214,4 +196,5 @@ async def grabip(ctx):
         ip.append(str(random.randint(0, 255)))
     await ctx.reply(".".join(ip))
 
+load_dotenv()
 bot.run(os.getenv("TOKEN"))
