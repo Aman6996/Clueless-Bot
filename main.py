@@ -5,6 +5,7 @@ from discord.ext import commands
 from dotenv import load_dotenv
 from googletrans import Translator
 
+translator = Translator()
 prefix = "$", "6."
 bot = commands.Bot(command_prefix=prefix,
                    intents=discord.Intents.all(), case_insensitive=True)
@@ -177,7 +178,6 @@ async def guildinfo(ctx):
 
 @bot.command(aliases=["ts"])
 async def translate(ctx, *, user_input, user: discord.User = None):
-    translator = Translator()
     tr = translator.translate(f"{user_input}")
     text = tr.text
     TransDict = {"af": "Afrikaans", "sq": "Albanian", "am": "Amharic", "ar": "Arabic", "hy": "Armenian", "az": "Azerbaijani", "eu": "Basque", "be": "Belarusian", "bn": "Bengali", "bs": "Bosnian", "bg": "Bulgarian", "ca": "Catalan", "ceb": "Cebuano", "zh-CN": "Chinese (Simplified)", "zh-TW": "Chinese (Traditional)", "co": "Corsican", "hr": "Croatian", "cs": "Czech", "da": "Danish", "nl": "Dutch", "en": "English", "eo": "Esperanto", "et": "Estonian", "fi": "Finnish", "fr": "French", "fy": "Frisian", "gl": "Galician", "ka": "Georgian", "de": "German", "el": "Greek", "gu": "Gujarati", "ht": "Haitian Creole", "ha": "Hausa", "haw": "Hawaiian", "iw": "Hebrew", "hi": "Hindi", "hmn": "Hmong", "hu": "Hungarian", "is": "Icelandic", "ig": "Igbo", "id": "Indonesian", "ga": "Irish", "it": "Italian", "ja": "Japanese", "jw": "Javanese", "kn": "Kannada", "kk": "Kazakh", "km": "Khmer", "ko": "Korean", "ku": "Kurdish", "ky": "Kyrgyz", "lo": "Lao", "la": "Latin",
