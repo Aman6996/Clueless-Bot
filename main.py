@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 from googletrans import Translator
 
 translator = Translator()
-prefix = "$", "6."
+prefix = "a!","A!", "6."
 bot = commands.Bot(command_prefix=prefix,
                    intents=discord.Intents.all(), case_insensitive=True)
 bot.remove_command("help")
