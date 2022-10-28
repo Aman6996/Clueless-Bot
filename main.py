@@ -22,6 +22,7 @@ async def on_message(message):
         await message.reply("Type `$help` to view all available commands")
 
 # i will secretly come to your house and kidnap you then put you in my basement if you try stealing this. this took more than 2 hours to make
+# STARBOARD FEATURE (WIP)
 @bot.event
 async def on_reaction_add(reaction: discord.Reaction,  user: (discord.User, discord.Reaction)):
     star = "⭐"
