@@ -6,4 +6,6 @@ INVITE: https://discord.com/api/oauth2/authorize?client_id=847459841412956160&pe
 
 PREFIX: a! or A!
 
+github/bot profile picture suggestions are always open!
+
 do not question the "uwu" command
