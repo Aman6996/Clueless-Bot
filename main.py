@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 from googletrans import Translator
 
 translator = Translator()
-prefix = "a!","A!", "6."
+prefix = "a!", "A!", "6."
 bot = commands.Bot(command_prefix=prefix,
                    intents=discord.Intents.all(), case_insensitive=True)
 bot.remove_command("help")
@@ -19,45 +19,45 @@ async def on_message(message):
     else:
         await bot.process_commands(message)
     if f"<@{bot.user.id}>" in message.content:
-        await message.reply("Type `$help` to view all available commands")
+        await message.reply("Type `a!help` to view all available commands")
 
-# i will secretly come to your house and kidnap you then put you in my basement if you try stealing this. this took more than 2 hours to make
-# STARBOARD FEATURE (WIP)
+
 @bot.event
 async def on_reaction_add(reaction: discord.Reaction,  user: (discord.User, discord.Reaction)):
-    star = "⭐"
-    starboard = bot.get_channel(789195444957609994)
-    if reaction.emoji in star:
-        if reaction.count > 3:
-            embed = discord.Embed(title=reaction.message.author,
-                                  description=f"{reaction.message.content}", color=0x0dff00)
-        if reaction.message.attachments:
-            embed.set_image(reaction.message.attachments[0].url)
-        await starboard.send(f"⭐ {reaction.count} | {reaction.message.channel.mention}", embed=embed)
+    starboard = bot.get_channel(798262200955174958)
+    jumpurl = reaction.message.jump_url
+    if reaction.emoji == "⭐":
+        if reaction.count < 2:
+            embed = discord.Embed(title=f"{reaction.message.author}",
+                                  description=f"**Message:** {reaction.message.content}\n\n **Jump URL:** {jumpurl}", color=0x0dff00)
+            if reaction.message.attachments:
+            embed.set_image(
+                url=reaction.message.attachments[0])
+        await starboard.send(f"{reaction.message.channel.mention}", embed=embed)
 
 
-@bot.event
-async def on_command_error(ctx, error):
-    if isinstance(error, commands.CommandNotFound):
-        return await ctx.message.add_reaction("❓")
-    else:
-        raise error
+# @bot.event
+# async def on_command_error(ctx, error):
+#     if isinstance(error, commands.CommandNotFound):
+#         return await ctx.message.add_reaction("❓")
+#     else:
+#         raise error
 
 
-@bot.event
+@ bot.event
 async def on_ready():
     print('{0.user} is now online'.format(bot))
 
 
-@bot.command()
+@ bot.command()
 async def help(ctx):
-    embed = discord.Embed(title="Help", description="\n`$water` - Offers you water!\n\n `$coinflip` - Flips a coin\n\n `$getpfp` - Fetches the pfp of you **or** a given person\n\n`$pizza` - Offers your pizza!\n\n `$translate` - Translates text\n\n `$whois` - Fetches the info of a user\n\n `$guildinfo` - Displays the information of a server (also known as guild)")
+    embed = discord.Embed(title="Help", description="\n`a!water` - Offers you water!\n\n `a!coinflip` - Flips a coin\n\n `a!getpfp` - Fetches the pfp of you **or** a given person\n\n`a!pizza` - Offers your pizza!\n\n `a!translate` - Translates text\n\n `a!whois` - Fetches the info of a user\n\n `a!guildinfo` - Displays the information of a server (also known as guild)")
     embed.add_field(name="Not so useful commands",
-                    value="`$grabip` - grabs your ip lmao\n\n `$deadchat` - dead chat.\n\n `$uwu` - for... weirdos lmao\n\n `$smile` - smiles for you\n\n ")
+                    value="`a!grabip` - grabs your ip lmao\n\n `a!deadchat` - dead chat.\n\n `a!uwu` - for... weirdos lmao\n\n `a!smile` - smiles for you\n\n ")
     await ctx.reply(embed=embed)
 
 
-@bot.command()
+@ bot.command()
 async def ping(ctx):
     ping = round(bot.latency * 1000, 2)
 
@@ -72,23 +72,23 @@ async def ping(ctx):
         title="Ping", description=f"{ping} ms", color=color))
 
 
-@bot.command(aliases=["drink", "wotah"])
+@ bot.command(aliases=["drink", "wotah"])
 async def water(ctx):
     await ctx.reply("Here's your water!", file=discord.File("images/water.png"))
 
 
-@bot.command()
+@ bot.command()
 async def pizza(ctx):
     await ctx.reply("Here's your Pizza!", file=discord.File("images/pizza.jpg"))
 
 
-@bot.command()
+@ bot.command()
 async def smile(ctx):
     """smiles for you"""
     await ctx.send("<:widesmile1:826114986338025543><:widesmile2:826114986446553089><:widesmile3:826114986543153173>")
 
 
-@bot.command()
+@ bot.command()
 async def uwu(ctx):
     embed = discord.Embed(title="owo!")
     embed.set_image(
@@ -96,12 +96,12 @@ async def uwu(ctx):
     await ctx.reply(embed=embed)
 
 
-@bot.command(aliases=["flip"])
+@ bot.command(aliases=["flip"])
 async def coinflip(ctx):
     await ctx.reply(random.choice(["Heads!", "Tails!"]) + " :coin:")
 
 
-@bot.command(aliases=["source", "git", "code"])
+@ bot.command(aliases=["source", "git", "code"])
 async def github(ctx):
     embed = discord.Embed(
         title="CluelessBot",
@@ -113,7 +113,7 @@ async def github(ctx):
     await ctx.reply(embed=embed)
 
 
-@bot.command(aliases=["pfpget", "gpfp", "pfp"])
+@ bot.command(aliases=["pfpget", "gpfp", "pfp"])
 async def getpfp(ctx: commands.Context, user: discord.User = None):
     if not user:
         user = ctx.message.author
@@ -129,13 +129,13 @@ async def getpfp(ctx: commands.Context, user: discord.User = None):
     await ctx.send(embed=embed)
 
 
-@bot.command(aliases=["ched"])
+@ bot.command(aliases=["ched"])
 async def deadchat(ctx):
     embed = discord.Embed(title="dead chat", description="You know guys, I've been thinking about something. This chat has been pretty dead seeing as nobody has talked for a while now. But I feel like that's too long of a way to describe it, so I've come up with a brand new nomenclature that's gonna blow your minds. You see if you combine the word 'chat' with the word 'dead' you get the word CHED! It's quick, concise, clear, and straight to the point. Whenever the server is inactive, don't bother trying to strike up an interesting conversation. Just say ched. It's the easiest and most efficient way to revive it! It doesn't even matter how long nobody has talked. It could be two hours or two seconds. What's the difference? It still means the server is ched. And pointing that out is extremely imperative to the server's well-being. If you don't respond to literally every instance of the server's inactivity with the repeated use of this one word, the server will plunge into darkness and despair as people never send messages ever again. So go on. Repeat the word ched with pride and honor whenever people forget to speak and revel in the sense of fulfillment and power you get from the use of the word ched.", color=ctx.author.colour)
     await ctx.send(embed=embed)
 
 
-@bot.command()
+@ bot.command()
 async def whois(ctx, user: discord.User = None):
     if not user:
         user = ctx.message.author
@@ -162,7 +162,7 @@ async def whois(ctx, user: discord.User = None):
     await ctx.reply(embed=embed)
 
 
-@bot.command(aliases=["gi"])
+@ bot.command(aliases=["gi"])
 async def guildinfo(ctx):
     guild = ctx.guild
     embed = discord.Embed(
@@ -190,7 +190,7 @@ async def guildinfo(ctx):
     await ctx.reply(embed=embed)
 
 
-@bot.command(aliases=["ts"])
+@ bot.command(aliases=["ts"])
 async def translate(ctx, *, user_input, user: discord.User = None):
     tr = translator.translate(f"{user_input}")
     text = tr.text
@@ -203,12 +203,18 @@ async def translate(ctx, *, user_input, user: discord.User = None):
     await ctx.reply(embeds=[TranslatedFrom, TranslatedTo])
 
 
-@bot.command(aliases=["ip", "genip"])
+@ bot.command(aliases=["ip", "genip"])
 async def grabip(ctx):
     ip = []
     for i in range(4):
         ip.append(str(random.randint(0, 255)))
     await ctx.reply(".".join(ip))
+
+
+@ bot.command()
+async def cowisbad(ctx, *, user_input):
+    await ctx.reply(user_input)
+
 
 load_dotenv()
 bot.run(os.getenv("TOKEN"))
