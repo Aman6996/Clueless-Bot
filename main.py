@@ -238,4 +238,4 @@ async def convert(interaction: discord.Interaction, amount: int, base: str, to: 
 
 # load_dotenv()
 # bot.run(os.getenv("TOKEN"))
-bot.run("yes")
+bot.run("Yes.")
