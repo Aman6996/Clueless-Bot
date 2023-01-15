@@ -59,19 +59,22 @@ async def on_ready():
 
 @bot.command()
 async def help(ctx):
-    embed = discord.Embed(title="Help", description="""`a!water` - Offers you water! 
-    `a!coinflip` - Flips a coin
-    `a!getpfp` - Fetches the pfp of you **or** a given person
-    `a!pizza` - Offers you pizza!
-    `a!translate` - Translates text
-    `a!whois` - Fetches the info of a user
-    `a!guildinfo` - Displays the information of a server (also known as guild)
-    `/convert` - Converts between currencies""")
+    embed = discord.Embed(title="Help", 
+    description="""`a!water` - Offers you water! 
+                   `a!coinflip` - Flips a coin
+                   `a!getpfp` - Fetches the pfp of you **or** a given person
+                   `a!pizza` - Offers you pizza!
+                   `a!translate` - Translates text
+                   `a!whois` - Fetches the info of a user
+                   `a!guildinfo` - Displays the information of a server (also known as guild)
+                   `/convert` - Converts between currencies"""
+)
     embed.add_field(name="Not so useful commands",
                     value="""`a!grabip` - grabs your ip lmao
                      `a!deadchat` - dead chat.
                      `a!uwu` - for... weirdos lmao
-                     `a!smile` - smiles for you""")
+                     `a!smile` - smiles for you"""
+)
     await ctx.reply(embed=embed)
 
 
@@ -248,4 +251,4 @@ async def stop(ctx):
 
 # load_dotenv()
 # bot.run(os.getenv("TOKEN"))
-bot.run("not leaking tokent this time")
+bot.run("not again")
