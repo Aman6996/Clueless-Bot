@@ -248,4 +248,4 @@ async def stop(ctx):
 
 # load_dotenv()
 # bot.run(os.getenv("TOKEN"))
-bot.run("ODQ3NDU5ODQxNDEyOTU2MTYw.G42rxS.RbF-mR5irczbFypeYrMVS9iucXXptc7-Uu95kg")
+bot.run("not leaking tokent this time")
