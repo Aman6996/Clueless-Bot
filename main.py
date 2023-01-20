@@ -4,8 +4,8 @@ import discord
 import random
 from discord import app_commands
 from discord.ext import commands
-# import json WILL USE IN FUTURE.
-# from dotenv import load_dotenv
+import requests
+import config
 from py_currency_converter import convert as currency_convert
 from googletrans import Translator
 
@@ -25,11 +25,11 @@ async def on_message(message):
 
 @bot.command()
 async def sync(ctx, guild: discord.Guild = None):
-        msg = await ctx.reply("Syncing app commands...")
-        if guild is not None:
-            bot.tree.copy_global_to(guild=guild)
-        await bot.tree.sync(guild=guild)
-        await msg.edit(content="Synced app commands.")
+    msg = await ctx.reply("Syncing app commands...")
+    if guild is not None:
+        bot.tree.copy_global_to(guild=guild)
+    await bot.tree.sync(guild=guild)
+    await msg.edit(content="Synced app commands.")
 
 @bot.event
 async def on_reaction_add(reaction: discord.Reaction,  user: (discord.User, discord.Reaction)):
@@ -37,7 +37,7 @@ async def on_reaction_add(reaction: discord.Reaction,  user: (discord.User, disc
     starboard = bot.get_channel(796492337789403156)
     if reaction.emoji in star:
         if reaction.count < 2:
-            embed = discord.Embed(title=reaction.message.author, description=f"{reaction.message.content}", color=0x0dff00)
+            embed = discord.Embed(title=reaction.message.author, description=reaction.message.content, color=0x0dff00)
         if reaction.message.attachments:
             embed.set_image(url=reaction.message.attachments[0])
         await starboard.send(reaction.message.channel.mention, embed=embed)
@@ -51,10 +51,9 @@ async def on_command_error(ctx, error):
         raise error
 
 
-
 @bot.event
 async def on_ready():
-    print(F"{bot.user} is now online.")
+    print(f"{bot.user} is now online.")
 
 
 @bot.command()
@@ -71,9 +70,9 @@ async def help(ctx):
 )
     embed.add_field(name="Not so useful commands",
                     value="""`a!grabip` - grabs your ip lmao
-                     `a!deadchat` - dead chat.
-                     `a!uwu` - for... weirdos lmao
-                     `a!smile` - smiles for you"""
+                             `a!deadchat` - dead chat.
+                             `a!uwu` - for... weirdos lmao
+                             `a!smile` - smiles for you"""
 )
     await ctx.reply(embed=embed)
 
@@ -172,7 +171,8 @@ async def whois(ctx, user: discord.User = None):
                         **Mention:** {user.mention}
                         **User ID**: {user.id}
                         **Is a bot:** {user.bot}
-                        **Account created at:** <t:{round(user.created_at.timestamp())}>\n"""
+                        **Account created at:** <t:{round(user.created_at.timestamp())}>
+                        """
     if member and member.display_name != user.name:
         embed.description += f"**Nickname**: {member.display_name}\n"
     if member:
@@ -194,7 +194,8 @@ async def guildinfo(ctx):
                              **Owner:** {guild.owner.mention}"
                              **Verification level:** {guild.verification_level}"
                              **Filesize limit:** {round(guild.filesize_limit/(1000000))}MB"
-                             **Boost level:** {guild.premium_tier} ({guild.premium_subscription_count} Boosts)\n"""
+                             **Boost level:** {guild.premium_tier} ({guild.premium_subscription_count} Boosts)
+                          """
     if guild.premium_subscriber_role:
         embed.description += f"**Server booster role:** {guild.premium_subscriber_role.mention}\n\n"
     human = [member for member in guild.members if not member.bot]
@@ -227,9 +228,6 @@ async def grabip(ctx):
         ip.append(str(random.randint(0, 255)))
     await ctx.reply(".".join(ip))
 
-@bot.tree.command()
-async def sayhello(interaction: discord.Interaction):
-    await interaction.response.send_message(f'Hi, {interaction.user.mention}')
 
 @bot.tree.command()
 @app_commands.describe(
@@ -249,6 +247,41 @@ async def stop(ctx):
     await ctx.reply("Stopped.")
     sys.exit()
 
-# load_dotenv()
-# bot.run(os.getenv("TOKEN"))
-bot.run("not again")
+@bot.tree.command()
+@app_commands.describe(
+    int1 = "the 1st integer",
+    int2 = "the 2nd integer"
+)
+
+async def add(interaction: discord.Interaction, int1: int, int2: int):
+    await interaction.response.send_message(f"{int1} + {int2} = {int1+int2}") 
+
+@bot.tree.command()
+@app_commands.describe(
+    int1 = "the 1st integer",
+    int2 = "the 2nd integer"
+)
+
+async def divide(interaction: discord.Interaction, int1: int, int2: int):
+    await interaction.response.send_message(f"{int1} / {int2} = {int1/int2}") 
+@bot.tree.command()
+@app_commands.describe(
+    int1 = "the 1st integer",
+    int2 = "the 2nd integer"
+)
+
+async def subtract(interaction: discord.Interaction, int1: int, int2: int):
+    await interaction.response.send_message(f"{int1} - {int2} = {int1-int2}") 
+@bot.tree.command()
+@app_commands.describe(
+    int1 = "the 1st integer",
+    int2 = "the 2nd integer"
+)
+async def multiply(interaction: discord.Interaction, int1: int, int2: int):
+    await interaction.response.send_message(f"{int1} * {int2} = {int1*int2}") 
+
+@bot.command()
+async def genhorrorgame(ctx):
+    await ctx.send(random.choice(requests.get("https://api.factmaven.com/xml-to-json?xml=https://itch.io/games/free/tag-horror.xml").json()["rss"]["channel"]["item"])["link"])
+
+bot.run(config.token)
