@@ -66,6 +66,7 @@ async def help(ctx):
                    `a!translate` - Translates text
                    `a!whois` - Fetches the info of a user
                    `a!guildinfo` - Displays the information of a server (also known as guild)
+                   `a!gengame` - Fetches a random game from itch.io
                    `/convert` - Converts between currencies"""
 )
     embed.add_field(name="Not so useful commands",
@@ -281,7 +282,24 @@ async def multiply(interaction: discord.Interaction, int1: int, int2: int):
     await interaction.response.send_message(f"{int1} * {int2} = {int1*int2}") 
 
 @bot.command()
-async def genhorrorgame(ctx):
-    await ctx.send(random.choice(requests.get("https://api.factmaven.com/xml-to-json?xml=https://itch.io/games/free/tag-horror.xml").json()["rss"]["channel"]["item"])["link"])
+async def gengame(ctx, input=None):
+    if input == "horror":
+        await ctx.reply(random.choice(requests.get("https://api.factmaven.com/xml-to-json?xml=https://itch.io/games/free/tag-horror.xml").json()["rss"]["channel"]["item"])["link"])
+    elif input == "action":
+        await ctx.reply(random.choice(requests.get("https://api.factmaven.com/xml-to-json?xml=https://itch.io/games/free/genre-action.xml").json()["rss"]["channel"]["item"])["link"])
+    elif input == "singleplayer":
+        await ctx.reply(random.choice(requests.get("https://api.factmaven.com/xml-to-json?xml=https://itch.io/games/free/tag-singleplayer.xml").json()["rss"]["channel"]["item"])["link"])
+    elif input == "rpg":
+        await ctx.reply(random.choice(requests.get("https://api.factmaven.com/xml-to-json?xml=https://itch.io/games/free/genre-rpg.xml").json()["rss"]["channel"]["item"])["link"])
+    elif input == "puzzle":
+        await ctx.reply(random.choice(requests.get("https://api.factmaven.com/xml-to-json?xml=https://itch.io/games/free/genre-puzzle.xml").json()["rss"]["channel"]["item"])["link"])
+    elif input == "survival":
+        await ctx.reply(random.choice(requests.get("https://api.factmaven.com/xml-to-json?xml=https://itch.io/games/free/tag-survival.xml").json()["rss"]["channel"]["item"])["link"])
+    elif input == "shooter":
+        await ctx.reply(random.choice(requests.get("https://api.factmaven.com/xml-to-json?xml=https://itch.io/games/free/genre-shooter.xml").json()["rss"]["channel"]["item"])["link"])
+    elif input == "arcade":
+        await ctx.reply(random.choice(requests.get("https://api.factmaven.com/xml-to-json?xml=https://itch.io/games/free/tag-arcade.xml").json()["rss"]["channel"]["item"])["link"])
+    elif input == None:
+        await ctx.reply("Please input a genre name! (horror, action, singleplayer, rpg, puzzle, survival, shooter, arcade)")
 
 bot.run(config.token)
