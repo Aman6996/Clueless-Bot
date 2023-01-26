@@ -1,4 +1,3 @@
-import os
 import sys
 import discord
 import random
@@ -8,6 +7,7 @@ import requests
 import config
 from py_currency_converter import convert as currency_convert
 from googletrans import Translator
+import time
 
 translator = Translator()
 prefix = "a!","A!", "6."
@@ -67,6 +67,7 @@ async def help(ctx):
                    `a!whois` - Fetches the info of a user
                    `a!guildinfo` - Displays the information of a server (also known as guild)
                    `a!gengame` - Fetches a random game from itch.io
+                   `a!play` - Plays audio from the given link
                    `/convert` - Converts between currencies"""
 )
     embed.add_field(name="Not so useful commands",
@@ -80,17 +81,29 @@ async def help(ctx):
 
 @bot.command()
 async def ping(ctx):
-    ping = round(bot.latency * 1000, 2)
+    # stolen from fripe.py
+    await ctx.message.add_reaction("🏓")
 
-    if ping < 100:
-        color = 0x0dff00
-    elif ping > 100 and ping < 150:
-        color = 0xff4800
+    now = time.perf_counter()
+    msg = await ctx.reply("Checking message latency...")
+    then = time.perf_counter()
+    message_latency = round((then - now) * 1000)
+
+    websocket_latency = round(bot.latency * 1000)
+    if websocket_latency < 130:
+        colour = 0x44FF44
+    elif websocket_latency < 180:
+        colour = 0xFF8C00
     else:
-        color = 0xff0000
+         colour = 0xFF2200
 
-    await ctx.send(embed=discord.Embed(
-        title="Ping", description=f"{ping} ms", color=color))
+    embed = discord.Embed(title="Pong! :ping_pong:", colour=colour)
+    embed.description = f"""**Websocket latency:** {websocket_latency}ms
+**Message latency:** {message_latency}ms
+"""
+
+    await msg.edit(content="", embed=embed)
+
 
 
 @bot.command(aliases=["drink", "wotah"])
@@ -191,20 +204,20 @@ async def guildinfo(ctx):
     if guild.description:
         embed.description += f"**Description:** ```\n{guild.description}```\n"
     embed.description += f"""**Guild ID:** {guild.id}"
-                             **Created at:** <t:{round(guild.created_at.timestamp())}>"
-                             **Owner:** {guild.owner.mention}"
-                             **Verification level:** {guild.verification_level}"
-                             **Filesize limit:** {round(guild.filesize_limit/(1000000))}MB"
+                             **Created at:** <t:{round(guild.created_at.timestamp())}>
+                             **Owner:** {guild.owner.mention}
+                             **Verification level:** {guild.verification_level}
+                             **Filesize limit:** {round(guild.filesize_limit/(1000000))}MB
                              **Boost level:** {guild.premium_tier} ({guild.premium_subscription_count} Boosts)
                           """
     if guild.premium_subscriber_role:
         embed.description += f"**Server booster role:** {guild.premium_subscriber_role.mention}\n\n"
     human = [member for member in guild.members if not member.bot]
     bot = [member for member in guild.members if member.bot]
-    embed.description += f"""**Members:** {guild.member_count}/{guild.max_members} (🤖{len(bot)} | 👤{len(human)})"
-                             **Emojis:** {len(guild.emojis)}/{guild.emoji_limit}"
-                             **Roles:** {len(guild.roles)}"
-                             **Stickers:** {len(guild.stickers)}/{guild.sticker_limit}"
+    embed.description += f"""**Members:** {guild.member_count}/{guild.max_members} (🤖{len(bot)} | 👤{len(human)})
+                             **Emojis:** {len(guild.emojis)}/{guild.emoji_limit}
+                             **Roles:** {len(guild.roles)}
+                             **Stickers:** {len(guild.stickers)}/{guild.sticker_limit}
                              **Channels:** {len(guild.channels)} (⌨️{len(guild.text_channels)} 🔈{len(guild.voice_channels)} 🎭{len(guild.stage_channels)})"""
     embed.set_image(url=guild.banner)
     embed.set_thumbnail(url=guild.icon)
@@ -236,7 +249,7 @@ async def grabip(ctx):
     base = 'The initial currency to convert from',
     to = 'The currency to convert to'
 )
-async def convert(interaction: discord.Interaction, amount: int, base: str, to: str):
+async def convert(interaction: discord.Interaction, amount: float, base: str, to: str):
     currency_convert(base=base, amount=amount, to=[to])
     new_amount = currency_convert(base=base, amount=amount, to=[to])[to]
     embed = discord.Embed(title="Converted", description=f"**Amount:** {amount} -> {new_amount}\n **Currency:** {base} -> {to}")
@@ -299,7 +312,30 @@ async def gengame(ctx, input=None):
         await ctx.reply(random.choice(requests.get("https://api.factmaven.com/xml-to-json?xml=https://itch.io/games/free/genre-shooter.xml").json()["rss"]["channel"]["item"])["link"])
     elif input == "arcade":
         await ctx.reply(random.choice(requests.get("https://api.factmaven.com/xml-to-json?xml=https://itch.io/games/free/tag-arcade.xml").json()["rss"]["channel"]["item"])["link"])
-    elif input == None:
+    elif input == None: 
         await ctx.reply("Please input a genre name! (horror, action, singleplayer, rpg, puzzle, survival, shooter, arcade)")
+
+@bot.command()
+async def join(ctx):
+    if ctx.author.voice is None:
+        await ctx.reply("Please join a voice channel!")
+    channel = ctx.author.voice.channel
+    await channel.connect()
+
+@bot.command()
+async def leave(ctx):
+    server = ctx.message.guild.voice_client
+    await server.disconnect()    
+
+@bot.command()
+async def play(ctx, *, url=None):
+    if ctx.author.voice is None:
+        await ctx.reply("Please join a voice channel!")
+    channel = ctx.author.voice.channel
+    voice = await channel.connect()
+    voice.play(discord.FFmpegPCMAudio(url))
+    if voice.is_playing:
+        await time.sleep(1)
+    await voice.disconnect()
 
 bot.run(config.token)
