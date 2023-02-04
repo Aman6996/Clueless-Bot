@@ -329,8 +329,6 @@ async def leave(ctx):
 
 @bot.command()
 async def play(ctx, *, url=None):
-    if ctx.author.voice is None:
-        await ctx.reply("Please join a voice channel!")
     channel = ctx.author.voice.channel
     voice = await channel.connect()
     voice.play(discord.FFmpegPCMAudio(url))
