@@ -1,14 +1,16 @@
 import sys
+import os
 import discord
 import random
 from discord import app_commands
 from discord.ext import commands
 import requests
-import config
-from py_currency_converter import convert as currency_convert
+from dotenv import load_dotenv
+# from py_currency_converter import convert as currency_convert
 from googletrans import Translator
 import time
 
+load_dotenv()
 translator = Translator()
 prefix = "a!","A!", "6."
 bot = commands.Bot(command_prefix=prefix, intents=discord.Intents.all(), case_insensitive=True)
@@ -243,6 +245,7 @@ async def grabip(ctx):
     await ctx.reply(".".join(ip))
 
 
+"""
 @bot.tree.command()
 @app_commands.describe(
     amount = 'How much to convert',
@@ -254,6 +257,7 @@ async def convert(interaction: discord.Interaction, amount: float, base: str, to
     new_amount = currency_convert(base=base, amount=amount, to=[to])[to]
     embed = discord.Embed(title="Converted", description=f"**Amount:** {amount} -> {new_amount}\n **Currency:** {base} -> {to}")
     await interaction.response.send_message(embed=embed)
+"""
 
 @bot.command()
 @commands.is_owner()
@@ -336,4 +340,5 @@ async def play(ctx, *, url=None):
         await time.sleep(1)
     await voice.disconnect()
 
-bot.run(config.token)
+TOKEN = os.getenv("DISCORD_TOKEN")
+bot.run(TOKEN)
