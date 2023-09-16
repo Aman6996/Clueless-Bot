@@ -1,5 +1,5 @@
 googletrans==4.0.0rc1
 discord.py
-py_currency_convert
+google_currency
 requests
 python-dotenv
